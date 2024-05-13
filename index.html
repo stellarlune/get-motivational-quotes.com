@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Motivated</title>
+     <link rel="icon" href="logo.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            margin-top: 100px;
+        }
+        .caption {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .buy-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .buy-button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .low-balance {
+            color: red;
+            font-weight: bold;
+        }
+        .quote {
+            display: none;
+            font-style: italic;
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="caption">Need motivation? Buy a quote!</h1>
+        <a href="#" class="buy-button" id="buyButton" onclick="processPayment()">Buy - $20</a>
+        <p id="priceMessage" class="message"></p>
+        <p id="motivationalQuote" class="quote"></p>
+    </div>
+
+    <script>
+        let clickCount = 0;
+
+        const motivationalQuotes = [
+            "Embrace the storm, for within its chaos lies the seeds of your strength. - ChatGPT",
+            "Let your dreams be the compass that guides you through the darkest nights and towards the brightest horizons. - ChatGPT",
+            "Doubt may knock on your door, but only perseverance holds the key to your dreams. - ChatGPT",
+            "In the dance of life, every stumble is just a step towards greatness. - ChatGPT",
+            "Believe in the beauty of your journey, for even the darkest paths lead to the brightest destinations. - ChatGPT",
+            "Let your heart be the compass and your dreams the map to your destiny. - ChatGPT",
+            "The universe conspires in favor of those who dare to chase their dreams relentlessly. - ChatGPT",
+            "In the symphony of life, your passion is the melody that echoes through eternity. - ChatGPT",
+            "Adversity is the sculptor of champions; embrace its chisel and carve your destiny. - ChatGPT",
+            "Rise above the whispers of doubt, and let the symphony of your dreams resonate across the universe. - ChatGPT",
+            "Your potential knows no bounds; dare to explore the depths of your greatness. - ChatGPT",
+            "In the garden of dreams, perseverance is the water that nourishes the seeds of success. - ChatGPT",
+            "With each sunrise comes a new opportunity to rewrite the story of your life; seize it with unwavering resolve. - ChatGPT",
+            "Within you lies the power to turn every stumbling block into a stepping stone towards greatness. - ChatGPT",
+            "Dreams are the whispers of your soul; listen closely and let them guide you to your destiny. - ChatGPT",
+            "The path to success is not always straight, but every twist and turn shapes you into the person you're meant to become. - ChatGPT",
+            "Let perseverance be your armor and determination your sword as you conquer the battlefield of life. - ChatGPT",
+            "The stars may seem distant, but within you burns the same fire that ignites the cosmos. - ChatGPT",
+            "Your dreams are the compass guiding you through the wilderness of life; trust in their direction and march forward with courage. - ChatGPT",
+            "In the silence of self-doubt, find the courage to roar with the conviction of your dreams. - ChatGPT",
+            "The universe bends to the will of those who dare to dream and act with unwavering determination. - ChatGPT",
+            "Within the depths of your soul lies an untapped reservoir of courage; dive in fearlessly and unleash your greatness. - ChatGPT",
+            "Every challenge is an opportunity in disguise; embrace it, conquer it, and emerge stronger than ever. - ChatGPT",
+            "The canvas of your destiny awaits the strokes of your determination; paint boldly, paint brilliantly. - ChatGPT",
+            "In the tapestry of life, adversity is the thread that weaves resilience into the fabric of your character. - ChatGPT",
+            "With each sunrise comes a chance to rewrite the script of your life; seize it with unwavering determination. - ChatGPT",
+            "Let your dreams be the lighthouse guiding you through the storms of uncertainty towards the shores of success. - ChatGPT",
+            "The seeds of greatness lie within you; nurture them with passion, perseverance, and unwavering belief. - ChatGPT",
+            "In the symphony of life, let your actions be the crescendo that echoes through eternity. - ChatGPT",
+            "Your journey may be long and arduous, but with perseverance as your compass, you will reach the summit of success. - ChatGPT",
+            "Every setback is a setup for a comeback; rise stronger, shine brighter, and never surrender to defeat. - ChatGPT",
+            "Within the labyrinth of challenges lies the path to your greatness; navigate it with courage and conviction. - ChatGPT",
+            "Believe in the power of your dreams, for they are the blueprint of your destiny waiting to be fulfilled. - ChatGPT",
+            "With perseverance as your compass, every step brings you closer to the summit of your dreams. - ChatGPT",
+            "With every challenge comes an opportunity to prove your resilience and emerge victorious. - ChatGPT",
+            "The key to unlocking your potential lies in the courage to embrace failure as a stepping stone towards greatness. - ChatGPT",
+            "Let your dreams be the compass that guides you through the darkest nights and towards the brightest horizons. - ChatGPT",
+            "With every obstacle, there is an opportunity to prove your strength and resilience. - ChatGPT",
+            "Courage is not the absence of fear but the triumph over it; let it fuel your journey to success. - ChatGPT",
+            "In the garden of life, let perseverance be the fertilizer that nurtures your dreams into reality. - ChatGPT",
+            "Every journey begins with a single step; take it boldly and embark on the path to greatness. - ChatGPT",
+            "Life is a canvas, and your actions are the brushstrokes that paint the masterpiece of your destiny. - ChatGPT",
+            "Challenges are the stepping stones to success; embrace them, conquer them, and grow stronger with each step. - ChatGPT",
+            "Let your dreams be the wings that lift you above the storms of life and carry you to the heights of success. - ChatGPT",
+            "Your destiny is not written in the stars but forged by the choices you make every day; choose wisely, and greatness will follow. - ChatGPT",
+            "Every setback is a setup for a comeback; let resilience be your guiding light through the darkest of times. - ChatGPT",
+            "Believe in yourself, for within you lies the power to turn your dreams into reality. - ChatGPT",
+            "Success is not a destination but a journey fueled by passion, perseverance, and unwavering determination. - ChatGPT",
+            "In the symphony of life, let your dreams be the melody that inspires others to dance to the rhythm of possibility. - ChatGPT",
+            "Let your dreams be the north star that guides you through the wilderness of uncertainty towards the shores of success. - ChatGPT",
+            "With every challenge comes an opportunity to discover the depths of your strength; embrace it, conquer it, and emerge victorious. - ChatGPT",
+            "Life is not about waiting for the storm to pass but learning to dance in the rain; let adversity be your greatest teacher. - ChatGPT",
+            "Your dreams are the roadmap to your destiny; trust in their guidance, and the universe will conspire to make them a reality. - ChatGPT",
+            "With each sunrise comes a chance to rewrite the story of your life; seize it with unwavering determination and boundless optimism. - ChatGPT",
+            "In the journey of life, let your passion be the fuel that drives you, and your perseverance the engine that propels you forward. - ChatGPT",
+            "Greatness lies not in never falling but in rising every time we fall; let resilience be your greatest strength. - ChatGPT",
+            "With every challenge comes an opportunity to rise stronger, shine brighter, and rewrite the story of your life; embrace it with open arms. - ChatGPT",
+            "Let your dreams be the guiding light that leads you through the darkness of uncertainty towards the shores of success. - ChatGPT",
+            "In the symphony of life, let your actions be the notes that compose the melody of your destiny; play them with passion and purpose. - ChatGPT",
+            "Success is not determined by how many times you fall but by how many times you rise; let resilience be your greatest asset. - ChatGPT",
+            "Life is not about waiting for the storm to pass but learning to dance in the rain; let adversity be your greatest teacher. - ChatGPT",
+            "Your dreams are the wings that will carry you to the heights of success; trust in their guidance, and the sky will be the limit. - ChatGPT",
+            "With every challenge comes an opportunity to discover the depths of your strength; embrace it, conquer it, and emerge victorious. - ChatGPT",
+            "Believe in yourself, for within you lies the power to turn your dreams into reality. - ChatGPT",
+            "Success is not a destination but a journey fueled by passion, perseverance, and unwavering determination. - ChatGPT",
+            "In the symphony of life, let your dreams be the melody that inspires others to dance to the rhythm of possibility. - ChatGPT",
+            "Let your dreams be the north star that guides you through the wilderness of uncertainty towards the shores of success. - ChatGPT",
+            "With every challenge comes an opportunity to rewrite the story of your life; seize it with unwavering determination and boundless optimism. - ChatGPT",
+            "In the journey of life, let your passion be the fuel that drives you, and your perseverance the engine that propels you forward. - ChatGPT",
+            "Greatness lies not in never falling but in rising every time we fall; let resilience be your greatest strength. - ChatGPT",
+            "With every challenge comes an opportunity to rise stronger, shine brighter, and rewrite the story of your life; embrace it with open arms. - ChatGPT",
+            "Let your dreams be the guiding light that leads you through the darkness of uncertainty towards the shores of success. - ChatGPT",
+            "In the symphony of life, let your actions be the notes that compose the melody of your destiny; play them with passion and purpose. - ChatGPT",
+            "Success is not determined by how many times you fall but by how many times you rise; let resilience be your greatest asset. - ChatGPT",
+            "Life is not about waiting for the storm to pass but learning to dance in the rain; let adversity be your greatest teacher. - ChatGPT",
+            "Your dreams are the wings that will carry you to the heights of success; trust in their guidance, and the sky will be the limit. - ChatGPT",
+            // Add more quotes as needed
+        ];
+
+        function processPayment() {
+            clickCount++;
+            if (clickCount < 30) {
+                document.getElementById('priceMessage').innerText = "Thank you for your purchase!";
+                displayMotivationalQuote();
+            } else {
+                document.getElementById('priceMessage').innerHTML = "<span class='low-balance'>Bank balance is too low to process.</span>";
+                document.getElementById('buyButton').setAttribute('disabled', true);
+                document.getElementById('motivationalQuote').innerText = ''; // Clear motivational quote
+            }
+        }
+
+        function displayMotivationalQuote() {
+            // Clear previous quote
+            document.getElementById('motivationalQuote').innerText = '';
+            // Display new quote
+            const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+            const quote = motivationalQuotes[randomIndex];
+            document.getElementById('motivationalQuote').innerText = quote;
+            document.getElementById('motivationalQuote').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
